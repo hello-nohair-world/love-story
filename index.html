@@ -362,8 +362,8 @@
   <div class="lb-cap" id="lbCap"></div>
 </div>
 
-<script src="photos.js?v=38"></script>
-<script src="moments_extra.js?v=38"></script>
+<script src="photos.js?v=39"></script>
+<script src="moments_extra.js?v=39"></script>
 <script>
 const CONFIG = {
   // 1) 你们的名字和在一起的日期（计时器按这个算）
@@ -479,6 +479,10 @@ function tick() {
 tick(); setInterval(tick, 1000);
 
 /* 时间线 */
+function thumbSrc(src) {
+  if (!src) return src;
+  return src.indexOf("photos/") === 0 ? src.replace("photos/", "photos/thumbs/") : src;
+}
 function picsFor(date) {
   return (CONFIG.photos || []).filter(p => p.date === date).map(p => p.src);
 }
@@ -497,7 +501,7 @@ CONFIG.stages.forEach(stage => {
             <div class="t-desc">${it.desc}</div>
             ${(it.photos && it.photos.length ? it.photos : picsFor(it.date)).length ? `
               <div class="t-photos">
-                ${(it.photos && it.photos.length ? it.photos : picsFor(it.date)).map(src => `<img src="${src}" alt="${it.title}" loading="lazy">`).join("")}
+                ${(it.photos && it.photos.length ? it.photos : picsFor(it.date)).map(src => `<img src="${thumbSrc(src)}" data-full="${src}" alt="${it.title}" loading="lazy" decoding="async" width="300" height="300">`).join("")}
               </div>
               <div class="t-toggle"></div>` : ""}
           </div>
@@ -512,7 +516,7 @@ CONFIG.stages.forEach(stage => {
         if (!item.classList.contains("expanded")) {
           item.classList.add("expanded");
         } else {
-          openLightbox(img.getAttribute("src"), `${it.title} · ${it.date.replaceAll("-", ".")}`);
+          openLightbox(img.getAttribute("data-full") || img.getAttribute("src"), `${it.title} · ${it.date.replaceAll("-", ".")}`);
         }
       };
     });
@@ -634,7 +638,7 @@ CONFIG.photos.forEach(p => {
   const el = document.createElement("div");
   el.className = "photo reveal";
   el.dataset.stage = p.stage;
-  el.innerHTML = `<img src="${p.src}" alt="${p.title}" loading="lazy"><div class="cap"><b>${p.title}</b>${p.cap}</div>`;
+  el.innerHTML = `<img src="${thumbSrc(p.src)}" data-full="${p.src}" alt="${p.title}" loading="lazy" decoding="async" width="400" height="400"><div class="cap"><b>${p.title}</b>${p.cap}</div>`;
   el.onclick = () => openLightbox(p.src, `${p.title} · ${p.stage}`);
   grid.appendChild(el);
 });
