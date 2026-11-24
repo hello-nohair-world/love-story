@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我们的恋爱纪念册</title>
+<style>
+  :root {
+    --bg: #fff8f5;
+    --card: #ffffff;
+    --rose: #e8637c;
+    --rose-light: #ff8fa3;
+    --rose-soft: #ffe3e8;
+    --gold: #d9a441;
+    --ink: #4a2b33;
+    --ink-soft: #8a6b72;
+    --shadow: 0 8px 30px rgba(232, 99, 124, .12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  .serif { font-family: "STKaiti", "KaiTi", "STSong", serif; }
+
+  /* ---------- 导航 ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+    padding: 12px 16px;
+    background: rgba(255, 248, 245, .85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(232, 99, 124, .12);
+  }
+  nav a {
+    text-decoration: none; color: var(--ink-soft);
+    font-size: 14px; padding: 6px 14px; border-radius: 999px;
+    transition: all .25s;
+  }
+  nav a:hover { background: var(--rose-soft); color: var(--rose); }
+
+  /* ---------- 首屏 ---------- */
+  header {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 90px 20px 60px;
+    position: relative;
+    background:
+      linear-gradient(rgba(255,248,245,.55), rgba(255,248,245,.92)),
+      url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Romantic%20pink%20and%20orange%20sunset%20sky%20with%20soft%20dreamy%20clouds%2C%20warm%20gradient%2C%20minimalist%20high%20quality%20photography&image_size=landscape_16_9') center/cover no-repeat;
+  }
+  .hero-names { font-size: clamp(34px, 6vw, 58px); letter-spacing: 4px; color: var(--ink); }
+  .hero-names .heart { color: var(--rose); animation: beat 1.2s infinite; display: inline-block; }
+  @keyframes beat { 0%,100% { transform: scale(1); } 30% { transform: scale(1.25); } }
+  .hero-sub { margin-top: 10px; color: var(--ink-soft); font-size: 16px; letter-spacing: 2px; }
+  .counter { display: flex; gap: 14px; margin-top: 42px; flex-wrap: wrap; justify-content: center; }
+  .counter .unit {
+    background: var(--card); border-radius: 18px; box-shadow: var(--shadow);
+    padding: 18px 22px; min-width: 96px;
+  }
+  .counter .num { font-size: 38px; font-weight: 700; color: var(--rose); font-variant-numeric: tabular-nums; }
+  .counter .label { font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
+  .counter .unit.days { background: linear-gradient(135deg, var(--rose), var(--rose-light)); }
+  .counter .unit.days .num, .counter .unit.days .label { color: #fff; }
+  .since { margin-top: 26px; font-size: 14px; color: var(--ink-soft); }
+  .float-heart {
+    position: absolute; bottom: -30px; color: var(--rose-light); opacity: .5;
+    animation: floatUp linear infinite; pointer-events: none; font-size: 18px;
+  }
+  @keyframes floatUp {
+    to { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+  }
+
+  /* ---------- 通用板块 ---------- */
+  section { max-width: 1080px; margin: 0 auto; padding: 76px 20px 20px; }
+  .section-title { text-align: center; font-size: 30px; letter-spacing: 3px; }
+  .section-title::after {
+    content: ""; display: block; width: 46px; height: 3px; margin: 12px auto 0;
+    background: linear-gradient(90deg, var(--rose), var(--rose-light)); border-radius: 2px;
+  }
+  .section-desc { text-align: center; color: var(--ink-soft); margin-top: 10px; font-size: 14px; }
+  .section-stats { text-align: center; color: var(--ink-soft); margin-top: 6px; font-size: 12px; letter-spacing: 1px; opacity: .75; }
+
+  /* ---------- 时间线 ---------- */
+  .stage { margin-top: 46px; }
+  .stage-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .stage-head h3 { font-size: 22px; color: var(--rose); }
+  .stage-head .range { color: var(--ink-soft); font-size: 13px; }
+  .timeline { position: relative; margin-top: 22px; padding-left: 26px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px;
+    background: linear-gradient(var(--rose-light), var(--rose-soft));
+  }
+  .t-item { position: relative; margin-bottom: 26px; scroll-margin-top: 150px; }
+  .t-item::before {
+    content: ""; position: absolute; left: -25px; top: 8px; width: 12px; height: 12px;
+    border-radius: 50%; background: #fff; border: 3px solid var(--rose-light);
+  }
+  .t-card {
+    background: var(--card); border-radius: 14px; box-shadow: var(--shadow);
+    padding: 16px 20px; transition: transform .25s;
+  }
+  .t-card:hover { transform: translateY(-3px); }
+  .t-date { font-size: 13px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .t-title { font-size: 17px; font-weight: 600; margin-top: 2px; }
+  .t-desc { font-size: 14px; color: var(--ink-soft); margin-top: 6px; }
+  .t-item.special::before { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(217,164,65,.2); }
+  .t-item.special .t-card {
+    border: 2px solid transparent;
+    background: linear-gradient(var(--card), var(--card)) padding-box,
+                linear-gradient(135deg, var(--gold), var(--rose-light)) border-box;
+  }
+  .badge-special {
+    display: inline-block; font-size: 12px; color: #fff; padding: 2px 10px;
+    border-radius: 999px; margin-left: 8px; vertical-align: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--rose-light));
+  }
+  .t-photos {
+    display: flex; gap: 6px; margin-top: 10px;
+  }
+  .t-photos img {
+    flex: 1 1 0; min-width: 0; max-width: 56px;
+    aspect-ratio: 1; height: auto; object-fit: cover; border-radius: 8px; cursor: pointer;
+    border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,.14); transition: all .25s;
+  }
+  .t-photos img:hover { transform: scale(1.07); }
+  .t-item.expanded .t-photos {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+    max-width: 312px;
+  }
+  .t-item.expanded .t-photos img {
+    width: 100%; max-width: none; height: auto; aspect-ratio: 1; border-radius: 10px;
+  }
+  .t-toggle {
+    display: inline-block; margin-top: 8px; font-size: 12px; color: var(--rose);
+    cursor: pointer; opacity: .85; user-select: none;
+  }
+  .t-toggle::before { content: "展开照片 ▾"; }
+  .t-item.expanded .t-toggle::before { content: "收起 ▴"; }
+
+  /* ---------- 照片墙 ---------- */
+  .filters { display: flex; justify-content: center; gap: 10px; margin-top: 26px; flex-wrap: wrap; }
+  .filters button {
+    border: 1px solid var(--rose-soft); background: #fff; color: var(--ink-soft);
+    padding: 7px 18px; border-radius: 999px; cursor: pointer; font-size: 14px; transition: all .25s;
+  }
+  .filters button.active, .filters button:hover {
+    background: var(--rose); border-color: var(--rose); color: #fff;
+  }
+  .gallery {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px; margin-top: 28px;
+  }
+  .photo {
+    border-radius: 14px; overflow: hidden; background: var(--card);
+    box-shadow: var(--shadow); cursor: pointer; transition: transform .25s;
+  }
+  .photo:hover { transform: translateY(-4px) rotate(-.5deg); }
+  .photo img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .photo .cap { padding: 10px 14px; font-size: 13px; color: var(--ink-soft); }
+  .photo .cap b { display: block; color: var(--ink); font-size: 14px; margin-bottom: 2px; }
+  .photo.hidden { display: none; }
+
+  /* ---------- 灯箱 ---------- */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 200; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(40, 15, 22, .88); padding: 30px; cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 92vw; max-height: 84vh; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .lightbox .lb-cap { position: absolute; bottom: 26px; color: #ffdfe5; font-size: 15px; text-align: center; width: 100%; }
+
+  /* ---------- 视频 ---------- */
+  .video-box {
+    margin-top: 30px; border-radius: 18px; overflow: hidden;
+    background: var(--card); box-shadow: var(--shadow);
+    aspect-ratio: 16/9; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    border: 2px dashed var(--rose-soft); color: var(--ink-soft); gap: 8px; padding: 20px;
+  }
+  .video-box .icon { font-size: 42px; color: var(--rose-light); }
+
+  /* ---------- 留言板 ---------- */
+  .letters { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+  .letter {
+    background: var(--card); border-radius: 16px; box-shadow: var(--shadow);
+    padding: 26px 24px; position: relative;
+  }
+  .letter::before {
+    content: "❝"; position: absolute; top: 8px; left: 16px;
+    font-size: 44px; color: var(--rose-soft); font-family: Georgia, serif;
+  }
+  .letter h4 { color: var(--rose); margin-bottom: 12px; font-size: 17px; text-align: right; }
+  .letter p { font-size: 14.5px; color: var(--ink); text-indent: 2em; }
+  .letter .sign { margin-top: 14px; text-align: right; color: var(--ink-soft); font-size: 13px; }
+  .notes { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 26px; }
+  .note {
+    padding: 12px 18px; border-radius: 4px; font-size: 14px; max-width: 240px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.08); transform: rotate(-1.5deg);
+  }
+  .note:nth-child(even) { transform: rotate(1.5deg); }
+  .note.c1 { background: #ffe3e8; }
+  .note.c2 { background: #fff3d6; }
+  .note.c3 { background: #e3f3ff; }
+
+  footer { text-align: center; padding: 60px 20px 40px; color: var(--ink-soft); font-size: 13px; }
+  footer .heart { color: var(--rose); }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s, transform .7s; }
+  .reveal.show { opacity: 1; transform: none; }
+
+  /* ---------- 时间线工具栏 ---------- */
+  .tl-toolbar {
+    position: sticky; top: 56px; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; flex-wrap: wrap;
+    max-width: 760px; margin: 24px auto 4px; padding: 10px 14px;
+    background: rgba(255, 248, 245, .92);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(232, 99, 124, .12);
+    border-radius: 16px;
+    box-shadow: 0 6px 22px rgba(232, 99, 124, .08);
+  }
+  .tl-seg {
+    display: flex; padding: 3px; border-radius: 999px;
+    background: #fff; border: 1px solid var(--rose-soft);
+  }
+  .tl-seg button {
+    border: 0; background: transparent; color: var(--ink-soft);
+    font-size: 13px; padding: 6px 16px; border-radius: 999px;
+    cursor: pointer; transition: all .22s; font-family: inherit;
+  }
+  .tl-seg button.active {
+    background: linear-gradient(135deg, var(--rose), var(--rose-light));
+    color: #fff; box-shadow: 0 4px 12px rgba(232, 99, 124, .28);
+  }
+  .tl-years {
+    display: flex; gap: 6px; align-items: center;
+    overflow-x: auto; max-width: 100%; scrollbar-width: none;
+  }
+  .tl-years::-webkit-scrollbar { display: none; }
+  .tl-years button {
+    border: 1px solid transparent; background: #fff; color: var(--ink-soft);
+    font-size: 13px; padding: 5px 12px; border-radius: 999px;
+    cursor: pointer; transition: all .22s; white-space: nowrap;
+    font-variant-numeric: tabular-nums; font-family: inherit;
+  }
+  .tl-years button:hover { color: var(--rose); border-color: var(--rose-soft); }
+  .tl-years button.active {
+    color: var(--rose); border-color: var(--rose);
+    background: var(--rose-soft); font-weight: 600;
+  }
+  .tl-years button.dim { opacity: .35; }
+  .tl-year-float {
+    position: fixed; right: 20px; top: 128px; z-index: 80;
+    padding: 8px 13px; border-radius: 12px;
+    background: rgba(255, 255, 255, .94);
+    border: 1px solid var(--rose-soft);
+    box-shadow: var(--shadow); color: var(--rose);
+    font-size: 16px; font-weight: 700; letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+    opacity: 0; transform: translateX(14px); pointer-events: none;
+    transition: opacity .25s, transform .25s;
+  }
+  .tl-year-float.show { opacity: 1; transform: none; }
+  .t-item.hide, .stage.hide { display: none; }
+  .tl-empty {
+    display: none; text-align: center; color: var(--ink-soft);
+    font-size: 14px; padding: 40px 0;
+  }
+  .tl-empty.show { display: block; }
+
+  @media (max-width: 900px) {
+    .tl-year-float { left: 10px; right: auto; }
+  }
+
+  @media (max-width: 560px) {
+    .tl-toolbar { top: 50px; padding: 8px 10px; gap: 8px; border-radius: 14px; }
+    .tl-year-float { left: 8px; right: auto; top: 132px; bottom: auto; }
+  }
+
+  @media (max-width: 560px) {
+    .counter .unit { min-width: 74px; padding: 12px 14px; }
+    .counter .num { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#home">首页</a>
+  <a href="#timeline">时间线</a>
+  <a href="#gallery">照片墙</a>
+  <a href="#video">视频</a>
+  <a href="#letters">留言板</a>
+</nav>
+
+<header id="home">
+  <h1 class="hero-names serif"><span id="nameHim">他的昵称</span> <span class="heart">♥</span> <span id="nameHer">她的昵称</span></h1>
+  <p class="hero-sub">从校服到婚纱 · 把喜欢写成故事</p>
+  <div class="counter">
+    <div class="unit days"><div class="num" id="cDays">0</div><div class="label">天</div></div>
+    <div class="unit"><div class="num" id="cHours">0</div><div class="label">小时</div></div>
+    <div class="unit"><div class="num" id="cMins">0</div><div class="label">分钟</div></div>
+    <div class="unit"><div class="num" id="cSecs">0</div><div class="label">秒</div></div>
+  </div>
+  <p class="since">我们在一起于 <span id="sinceDate">----</span></p>
+</header>
+
+<section id="timeline">
+  <h2 class="section-title serif">恋爱时间线</h2>
+  <p class="section-desc">按高中 · 大学 · 工作初期记录我们的每个阶段，金色的日子是特别的日子，点小图可以展开照片</p>
+  <p class="section-stats" id="timelineStats"></p>
+  <div class="tl-toolbar">
+    <div class="tl-seg" id="tlSeg">
+      <button type="button" data-mode="all" class="active">全部</button>
+      <button type="button" data-mode="special">特别的日子</button>
+    </div>
+    <div class="tl-years" id="tlYears"></div>
+  </div>
+  <div class="tl-year-float" id="tlYearFloat">2024 年</div>
+  <div class="tl-empty" id="tlEmpty">这里还没有特别的日子</div>
+  <div id="timelineContainer"></div>
+</section>
+
+<section id="gallery">
+  <h2 class="section-title serif">照片墙</h2>
+  <p class="section-desc">微信、QQ 里存的那些瞬间，都收进这里</p>
+  <div class="filters" id="filters"></div>
+  <div class="gallery" id="galleryGrid"></div>
+</section>
+
+<section id="video">
+  <h2 class="section-title serif">视频回忆</h2>
+  <p class="section-desc">属于我们的影像</p>
+  <div class="video-box" id="videoBox">
+    <div class="icon">▶</div>
+    <div>视频位 · 等你上传</div>
+    <div style="font-size:12px">把纪念视频文件放进项目后，替换此处即可播放</div>
+  </div>
+</section>
+
+<section id="letters">
+  <h2 class="section-title serif">留言板 · 情书</h2>
+  <p class="section-desc">那些没说出口的话</p>
+  <div class="letters" id="lettersBox"></div>
+  <div class="notes" id="notesBox"></div>
+</section>
+
+<footer>
+  用 <span class="heart">♥</span> 记录我们的每一天 · 我们的恋爱纪念册
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <img id="lbImg" src="" alt="">
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<script src="photos.js?v=38"></script>
+<script src="moments_extra.js?v=38"></script>
+<script>
+const CONFIG = {
+  // 1) 你们的名字和在一起的日期（计时器按这个算）
+  nameHim: "小郑",
+  nameHer: "小孙",
+  anniversary: "2019-10-01",   // 格式：YYYY-MM-DD
+
+  // 2) 时间线：每个阶段一组；special: true 会金色高亮显示
+  stages: [
+    {
+      name: "高中篇", range: "2019.09 - 2020.08",
+      items: [
+        { date: "2019-09-30", title: "在一起", desc: "“余生听大哥指挥。”那天晚上 23:17，把想说的都说了。", special: true },
+        { date: "2019-11-23", title: "为了未来", desc: "埋头刷题的日子，抬头就有你在。", special: false, photos: ["photos/qq/1574495979_1.jpg", "photos/qq/1574495979_2.jpg"] },
+        { date: "2020-01-01", title: "第一个元旦", desc: "磕磕绊绊，还想和你有好多年。一起努力！", special: false, photos: ["photos/qq/1577808015_1.jpg"] },
+        { date: "2020-02-01", title: "少女满十八岁", desc: "她成年了。我见证的第一个生日。", special: true, photos: ["photos/qq/1580486413_1.jpg"] },
+        { date: "2020-02-02", title: "20200202 对称日", desc: "人类纪元唯一一次最浪漫的时刻，也是我们最浪漫的时刻之一。三生有幸，与先生坠入爱河。", special: false, photos: ["photos/qq/1580646008_1.jpg", "photos/qq/1580646008_2.jpg", "photos/qq/1580646008_3.jpg", "photos/qq/1580646008_4.jpg", "photos/qq/1580646008_5.jpg", "photos/qq/1580646008_6.jpg", "photos/qq/1580646008_7.jpg", "photos/qq/1580646008_8.jpg", "photos/qq/1580646008_9.jpg"] },
+        { date: "2020-07-08", title: "高考结束", desc: "高考。我们的中学时代，安静收官。", special: true },
+        { date: "2020-08-25", title: "每天都在喜欢你", desc: "他发的：每天都在喜欢你，今天也是其中一天。", special: false, photos: ["photos/his/1598355767_1.jpg"] },
+        { date: "2020-08-30", title: "夏末的小美好", desc: "一些小美好正在井然有序地发生着。", special: false, photos: ["photos/qq/1598761223_1.jpg"] },
+      ]
+    },
+    {
+      name: "大学篇", range: "2020.09 - 2024.06",
+      items: [
+        { date: "2020-09-21", title: "郑先生生日", desc: "虽然今天是郑先生的生日，但火锅是必须要吃的，虾是一定不会剥的。", special: false, photos: ["photos/qq/1600698091_1.jpg"] },
+        { date: "2020-09-30", title: "他的承诺", desc: "他说：对你承诺的事都会实现的，可能会晚了点，但只要你在就好。她也发了：只好男朋友的色，只喜欢男朋友的颜，只亲男朋友的嘴，只抱男朋友这个人，他整个人都是我的，我们在一起一年啦。", special: true, photos: ["photos/his/1601421973_1.jpg"] },
+        { date: "2020-10-01", title: "今夜蹦迪结束", desc: "今夜蹦迪结束。", special: false, photos: ["photos/his/1601559113_1.jpg"] },
+        { date: "2020-10-17", title: "连心里", desc: "郑州 · 连心里。红墙下的合影，朋友们在下面说「慕了慕了」「拒绝狗粮」。", special: false, photos: ["photos/moments_wx/m25.jpg"] },
+        { date: "2020-10-18", title: "关于未来的约定", desc: "好期待再过几年我们手拉手去民政局，你成我的丈夫，我成为你的妻子。", special: true },
+        { date: "2021-01-01", title: "新年愿望", desc: "她发了：希望陪我碎碎念念的人，也能陪我岁岁年年。他在同一天发了同样的话。", special: false, photos: ["photos/qq/1609431927_1.jpg"] },
+        { date: "2021-04-04", title: "累并快乐的两天", desc: "她发的：五一假期，累并快乐的两天。", special: false, photos: ["photos/moments_extra/g20210404_1.jpg", "photos/moments_extra/g20210404_2.jpg", "photos/moments_extra/g20210404_3.jpg", "photos/moments_extra/g20210404_4.jpg", "photos/moments_extra/g20210404_5.jpg", "photos/moments_extra/g20210404_6.jpg", "photos/moments_extra/g20210404_7.jpg", "photos/moments_extra/g20210404_8.jpg", "photos/moments_extra/g20210404_9.jpg"] },
+        { date: "2021-05-04", title: "你就是我的风景", desc: "他说：如果你在看，我就是你的风景。", special: false, photos: ["photos/moments_extra/g20210504_1.jpg", "photos/moments_extra/g20210504_2.jpg", "photos/moments_extra/g20210504_3.jpg", "photos/moments_extra/g20210504_4.jpg", "photos/moments_extra/g20210504_5.jpg", "photos/moments_extra/g20210504_6.jpg", "photos/moments_extra/g20210504_7.jpg", "photos/moments_extra/g20210504_8.jpg", "photos/moments_extra/g20210504_9.jpg"] },
+        { date: "2021-05-20", title: "520 的花", desc: "小可人儿今天收到了来自郑先生的花花。他说：每一天都值得纪念。", special: false, photos: ["photos/qq/1621518068_1.jpg", "photos/qq/1621518068_2.jpg", "photos/his/1621515179_1.jpg"] },
+        { date: "2021-07-08", title: "高考结束一周年", desc: "去年今天我们高考结束，今年这天我们大一结束。", special: false, photos: ["photos/qq/1625732009_1.jpg"] },
+        { date: "2021-08-15", title: "第一次七夕", desc: "长这么大第一次这么过七夕。", special: true, photos: ["photos/qq/1628956861_1.jpg"] },
+        { date: "2021-10-01", title: "二周年纪念日", desc: "背靠中国红。这是祖国妈妈的 72 岁生日，也是我们的二周年纪念日。他也在同一天说了同样的话。", special: true, photos: ["photos/qq/1633083915_1.jpg", "photos/qq/1633083915_2.jpg", "photos/qq/1633083915_3.jpg", "photos/qq/1633083915_4.jpg"] },
+        { date: "2021-12-02", title: "20211202 对称日", desc: "对称日，横竖你都得快乐。", special: false, photos: ["photos/qq/1638458253_1.jpg"] },
+        { date: "2022-02-08", title: "她二十岁了", desc: "二字开头的年纪开始了。", special: true, photos: ["photos/qq/1644321871_1.jpg", "photos/qq/1644321871_2.jpg", "photos/qq/1644321871_3.jpg", "photos/qq/1644321871_4.jpg"] },
+        { date: "2022-04-04", title: "放风筝的春天", desc: "跟着风跑的春天。他说：你有多久没有放过风筝了。", special: false, photos: ["photos/qq/1649067173_1.jpg", "photos/qq/1649067173_2.jpg", "photos/qq/1649067173_3.jpg", "photos/qq/1649067173_4.jpg", "photos/qq/1649067173_5.jpg", "photos/qq/1649067173_6.jpg", "photos/qq/1649067173_7.jpg", "photos/qq/1649067173_8.jpg", "photos/qq/1649067173_9.jpg"] },
+        { date: "2022-06-29", title: "一个月后的重逢", desc: "一个月没见老郑，想死我啦。", special: false, photos: ["photos/qq/1656516740_1.jpg", "photos/qq/1656516740_2.jpg", "photos/qq/1656516740_3.jpg"] },
+        { date: "2022-10-03", title: "三周年两日游", desc: "国庆两日游，纪念恋爱的三周年。两天快把这辈子的路走完了，累并快乐着。他说：在祖国母亲的生日，我们三周年啦～", special: true, photos: ["photos/qq/1664812419_1.jpg", "photos/qq/1664812419_2.jpg", "photos/qq/1664812419_3.jpg", "photos/qq/1664812419_4.jpg", "photos/his/1664632533_1.jpg", "photos/his/1664632533_2.jpg", "photos/his/1664810703_1.jpg"] },
+        { date: "2023-05-27", title: "他去打省运会", desc: "省运会体验卡。两个场馆都不错，赛场上充满激情，努力打好每一球。", special: false, photos: ["photos/his/1685196514_1.jpg", "photos/his/1685196514_2.jpg"] },
+        { date: "2024-07-19", title: "最晚录取通知书", desc: "他说：最晚录取通知书，不服来辩。", special: false, photos: ["photos/his/1721370515_1.jpg"] },
+      ]
+    },
+    {
+      name: "工作初期篇", range: "2024.07 - 现在",
+      items: [
+        { date: "2025-03-24", title: "第 2001 天", desc: "祝 2001 天开心。平凡的日子，因为是你就值得纪念。他那天只发了两个字：2000。", special: true, photos: ["photos/qq/1742828081_1.jpg", "photos/qq/1742828081_2.jpg", "photos/qq/1742828081_3.jpg"] },
+      ]
+    },
+  ],
+
+  // 3) 照片墙：stage 对应阶段名；src 换成你自己的照片路径/链接
+  photos: [],
+
+  // 4) 情书
+  letters: [
+    { title: "三生有幸", paragraphs: ["这是人类纪元唯一一次最浪漫的时刻，是我们最浪漫的时刻之一。三生有幸，与先生坠入爱河。"], sign: "—— 小孙 · 2020.02.02" },
+    { title: "碎碎念念与岁岁年年", paragraphs: ["希望陪我碎碎念念的人，也能陪我岁岁年年。", "只好男朋友的色，只喜欢男朋友的颜，只亲男朋友的嘴，只抱男朋友这个人，他整个人都是我的。我们在一起一年啦。"], sign: "—— 小孙 · 2020.09.30" },
+    { title: "手拉手去民政局", paragraphs: ["好期待再过几年我们手拉手去民政局，你成我的丈夫，我成为你的妻子。", "余生听大哥指挥。"], sign: "—— 小孙 · 2020.10.18" },
+    { title: "他的承诺", paragraphs: ["对你承诺的事都会实现的，可能会晚了点，但只要你在就好。"], sign: "—— 小郑 · 2020.09.30" },
+    { title: "入目无别人", paragraphs: ["再次牵你手时，我只会抓得更紧。", "入目无别人，四下皆是你。"], sign: "—— 小郑 · 2020.10" },
+    { title: "你是我的风景", paragraphs: ["如果你在看，我就是你的风景。", "陪喜欢的人，做有趣的事。"], sign: "—— 小郑 · 2021.04" },
+  ],
+
+  // 5) 便利贴留言（可以不断加）
+  notes: [
+    "温柔是宝藏你也是。",
+    "星星和月亮可以藏起来，但对你的喜欢藏不了。",
+    "吾尝终日而思矣，不如跑过去见你。",
+    "你爱的人正听着你爱的歌想你。",
+    "义无反顾地努力，坚定不移地爱我。",
+    "余生听大哥指挥。",
+    "入目无别人，四下皆是你。",
+    "再次牵你手时，我只会抓得更紧。",
+    "每一天都值得纪念。",
+    "陪喜欢的人，做有趣的事。",
+    "你像天外来物一样求之不得。",
+  ],
+};
+CONFIG.photos = (window.PHOTOS && window.PHOTOS.length) ? window.PHOTOS : CONFIG.photos;
+/* 合并朋友圈时间线（moments_extra.js） */
+if (window.MOMENTS_EXTRA && window.MOMENTS_EXTRA.length) {
+  window.MOMENTS_EXTRA.forEach(function (m) {
+    var idx = 0;
+    if (m.date >= "2024-07-01") idx = 2;
+    else if (m.date >= "2020-09-01") idx = 1;
+    if (CONFIG.stages[idx]) CONFIG.stages[idx].items.push(m);
+  });
+  CONFIG.stages.forEach(function (s) {
+    s.items.sort(function (a, b) { return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); });
+  });
+}
+/* ============================================================ */
+
+/* ---------- 渲染 ---------- */
+document.getElementById("nameHim").textContent = CONFIG.nameHim;
+document.getElementById("nameHer").textContent = CONFIG.nameHer;
+document.getElementById("sinceDate").textContent = CONFIG.anniversary.replaceAll("-", ".");
+
+/* 计时器 */
+const start = new Date(CONFIG.anniversary + "T00:00:00");
+function tick() {
+  const diff = Math.max(0, Date.now() - start.getTime());
+  const s = Math.floor(diff / 1000);
+  document.getElementById("cDays").textContent  = Math.floor(s / 86400);
+  document.getElementById("cHours").textContent = String(Math.floor(s % 86400 / 3600)).padStart(2, "0");
+  document.getElementById("cMins").textContent  = String(Math.floor(s % 3600 / 60)).padStart(2, "0");
+  document.getElementById("cSecs").textContent  = String(s % 60).padStart(2, "0");
+}
+tick(); setInterval(tick, 1000);
+
+/* 时间线 */
+function picsFor(date) {
+  return (CONFIG.photos || []).filter(p => p.date === date).map(p => p.src);
+}
+const tlBox = document.getElementById("timelineContainer");
+CONFIG.stages.forEach(stage => {
+  const el = document.createElement("div");
+  el.className = "stage";
+  el.innerHTML = `
+    <div class="stage-head"><h3 class="serif">${stage.name}</h3><span class="range">${stage.range}</span></div>
+    <div class="timeline">
+      ${stage.items.map((it, idx) => `
+        <div class="t-item ${it.special ? "special" : ""}" data-idx="${idx}" data-date="${it.date}">
+          <div class="t-card">
+            <div class="t-date">${it.date.replaceAll("-", ".")}${it.special ? '<span class="badge-special">★ 特别的日子</span>' : ""}</div>
+            <div class="t-title">${it.title}</div>
+            <div class="t-desc">${it.desc}</div>
+            ${(it.photos && it.photos.length ? it.photos : picsFor(it.date)).length ? `
+              <div class="t-photos">
+                ${(it.photos && it.photos.length ? it.photos : picsFor(it.date)).map(src => `<img src="${src}" alt="${it.title}" loading="lazy">`).join("")}
+              </div>
+              <div class="t-toggle"></div>` : ""}
+          </div>
+        </div>`).join("")}
+    </div>`;
+  el.querySelectorAll(".t-item").forEach(item => {
+    const it = stage.items[+item.dataset.idx];
+    const photosBox = item.querySelector(".t-photos");
+    if (!photosBox) return;
+    photosBox.querySelectorAll("img").forEach(img => {
+      img.onclick = () => {
+        if (!item.classList.contains("expanded")) {
+          item.classList.add("expanded");
+        } else {
+          openLightbox(img.getAttribute("src"), `${it.title} · ${it.date.replaceAll("-", ".")}`);
+        }
+      };
+    });
+    item.querySelector(".t-toggle").onclick = () => item.classList.toggle("expanded");
+  });
+  tlBox.appendChild(el);
+});
+const totalEvents = CONFIG.stages.reduce((n, s) => n + s.items.length, 0);
+const allPhotos = new Set(CONFIG.photos.map(p => p.src));
+CONFIG.stages.forEach(s => s.items.forEach(it => (it.photos || []).forEach(x => allPhotos.add(x))));
+document.getElementById("timelineStats").textContent =
+  `共 ${totalEvents} 个瞬间 · ${allPhotos.size} 张照片`;
+
+/* ---------- 时间线：特别的日子筛选 + 年份跳转 ---------- */
+(function () {
+  const statsEl = document.getElementById("timelineStats");
+  const baseStats = statsEl.textContent;
+  const items = Array.from(document.querySelectorAll("#timelineContainer .t-item"));
+  const stages = Array.from(document.querySelectorAll("#timelineContainer .stage"));
+  const segBox = document.getElementById("tlSeg");
+  const yearsBox = document.getElementById("tlYears");
+  const floatEl = document.getElementById("tlYearFloat");
+  const emptyEl = document.getElementById("tlEmpty");
+  const toolbar = document.querySelector(".tl-toolbar");
+
+  items.forEach(it => { it.dataset.year = (it.dataset.date || "").slice(0, 4); });
+  const years = [...new Set(items.map(it => it.dataset.year).filter(Boolean))].sort();
+  years.forEach(y => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = y;
+    btn.dataset.year = y;
+    btn.onclick = () => scrollToYear(y);
+    yearsBox.appendChild(btn);
+  });
+  const yearBtns = Array.from(yearsBox.querySelectorAll("button"));
+
+  let mode = "all";
+
+  function scrollToYear(y) {
+    const target = items.find(it => it.dataset.year === y && !it.classList.contains("hide"));
+    if (!target) return;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function updateStats() {
+    if (mode === "all") { statsEl.textContent = baseStats; return; }
+    const visible = items.filter(it => !it.classList.contains("hide"));
+    let photoCount = 0;
+    visible.forEach(it => { photoCount += it.querySelectorAll(".t-photos img").length; });
+    statsEl.textContent = `特别的日子 · 共 ${visible.length} 个瞬间 · ${photoCount} 张照片`;
+  }
+
+  function applyMode(next) {
+    mode = next;
+    segBox.querySelectorAll("button").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+    items.forEach(it => {
+      const show = mode === "all" || it.classList.contains("special");
+      it.classList.toggle("hide", !show);
+    });
+    stages.forEach(stage => {
+      const any = stage.querySelectorAll(".t-item:not(.hide)").length > 0;
+      stage.classList.toggle("hide", !any);
+    });
+    emptyEl.classList.toggle("show", !items.some(it => !it.classList.contains("hide")));
+    yearBtns.forEach(b => {
+      const has = items.some(it => it.dataset.year === b.dataset.year && !it.classList.contains("hide"));
+      b.classList.toggle("dim", !has);
+    });
+    updateStats();
+    onScroll();
+  }
+
+  function onScroll() {
+    const tlRect = document.getElementById("timeline").getBoundingClientRect();
+    const toolbarBottom = toolbar ? toolbar.getBoundingClientRect().bottom : 110;
+    let current = null;
+    for (const it of items) {
+      if (it.classList.contains("hide")) continue;
+      const r = it.getBoundingClientRect();
+      if ((r.top + r.bottom) / 2 > toolbarBottom) {
+        current = it.dataset.year;
+        break;
+      }
+    }
+    const nearTimeline = tlRect.top < window.innerHeight * 0.55 && tlRect.bottom > 160;
+    floatEl.classList.toggle("show", !!current && nearTimeline);
+    if (current) floatEl.textContent = current + " 年";
+    yearBtns.forEach(b => b.classList.toggle("active", b.dataset.year === current));
+  }
+
+  segBox.querySelectorAll("button").forEach(b => {
+    b.onclick = () => applyMode(b.dataset.mode);
+  });
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  applyMode("all");
+})();
+
+/* 照片墙 + 筛选 */
+const stageNames = ["全部", ...CONFIG.stages.map(s => s.name), "朋友圈"];
+const filtersBox = document.getElementById("filters");
+stageNames.forEach((name, i) => {
+  const btn = document.createElement("button");
+  btn.textContent = name;
+  if (i === 0) btn.classList.add("active");
+  btn.onclick = () => {
+    filtersBox.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".photo").forEach(p => {
+      p.classList.toggle("hidden", name !== "全部" && p.dataset.stage !== name);
+    });
+  };
+  filtersBox.appendChild(btn);
+});
+const grid = document.getElementById("galleryGrid");
+CONFIG.photos.forEach(p => {
+  const el = document.createElement("div");
+  el.className = "photo reveal";
+  el.dataset.stage = p.stage;
+  el.innerHTML = `<img src="${p.src}" alt="${p.title}" loading="lazy"><div class="cap"><b>${p.title}</b>${p.cap}</div>`;
+  el.onclick = () => openLightbox(p.src, `${p.title} · ${p.stage}`);
+  grid.appendChild(el);
+});
+
+/* 灯箱 */
+const lb = document.getElementById("lightbox");
+function openLightbox(src, cap) {
+  document.getElementById("lbImg").src = src;
+  document.getElementById("lbCap").textContent = cap;
+  lb.classList.add("open");
+}
+lb.onclick = () => lb.classList.remove("open");
+
+/* 情书 & 便利贴 */
+const lettersBox = document.getElementById("lettersBox");
+CONFIG.letters.forEach(l => {
+  const el = document.createElement("div");
+  el.className = "letter reveal";
+  el.innerHTML = `<h4 class="serif">${l.title}</h4>${l.paragraphs.map(p => `<p>${p}</p>`).join("")}<div class="sign">${l.sign}</div>`;
+  lettersBox.appendChild(el);
+});
+const notesBox = document.getElementById("notesBox");
+CONFIG.notes.forEach((n, i) => {
+  const el = document.createElement("div");
+  el.className = `note c${i % 3 + 1} reveal`;
+  el.textContent = n;
+  notesBox.appendChild(el);
+});
+
+/* 漂浮爱心 */
+const header = document.querySelector("header");
+for (let i = 0; i < 12; i++) {
+  const h = document.createElement("span");
+  h.className = "float-heart";
+  h.textContent = "♥";
+  h.style.left = Math.random() * 100 + "%";
+  h.style.fontSize = 12 + Math.random() * 16 + "px";
+  h.style.animationDuration = 7 + Math.random() * 8 + "s";
+  h.style.animationDelay = Math.random() * 8 + "s";
+  header.appendChild(h);
+}
+
+/* 滚动渐显 */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => e.isIntersecting && e.target.classList.add("show"));
+}, { threshold: 0.12 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+</script>
+</body>
+</html>
